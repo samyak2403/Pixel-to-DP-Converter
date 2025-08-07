@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 20px;
     background-color: #f5f5f5;
+    min-height: 100vh;
 }
 
 .container {
@@ -16,10 +17,23 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    color: #2c3e50;
+header {
     text-align: center;
     margin-bottom: 30px;
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.2em;
+}
+
+.description {
+    color: #666;
+    font-size: 1.1em;
+    margin: 0;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .converter {
@@ -29,63 +43,238 @@ h1 {
     margin-bottom: 30px;
 }
 
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-hint {
+    color: #666;
+    font-size: 12px;
+    margin-top: 4px;
+    font-style: italic;
+}
+
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: bold;
+    color: #2c3e50;
 }
 
 input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
     font-size: 16px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+input.error {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    animation: shake 0.5s ease-in-out;
+}
+
+input.error:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
 #dpValue {
-    background-color: #f0f0f0;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 500;
 }
 
 .device-info {
     grid-column: span 2;
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 4px;
-    margin-top: 10px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 6px;
+    margin-top: 15px;
+    border-left: 4px solid #3498db;
+}
+
+.device-info p {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.device-info code {
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    color: #e74c3c;
+}
+
+.info-note {
+    color: #666;
+    font-style: italic;
+    margin-top: 15px !important;
 }
 
 .visualization {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
     margin-top: 30px;
 }
 
+.visualization h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
 .box {
-    height: 60px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.box:hover::before {
+    opacity: 1;
 }
 
 .px-box {
-    background-color: #3498db;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
 .dp-box {
-    background-color: #2ecc71;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.dp-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.copy-hint {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 10px;
+    opacity: 0.7;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.dp-box:hover .copy-hint {
+    opacity: 1;
+}
+
+.dp-box.copied {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+    animation: pulse 0.6s ease-in-out;
+}
+
+.dp-box.copied .copy-hint {
+    opacity: 0;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Add labels to boxes */
+.box::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    font-size: 12px;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+.px-box::after {
+    content: 'PIXELS';
+}
+
+.dp-box::after {
+    content: 'DP';
 }
 
 @media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
     .converter {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
     
     .device-info {
         grid-column: span 1;
+        padding: 15px;
+    }
+    
+    .box {
+        height: 60px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 400px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
     }
 }
